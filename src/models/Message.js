@@ -1,14 +1,24 @@
 const { Schema, model, Types } = require('mongoose');
 
+const eachMessageSchema = new Schema ({
+    author: { type: Types.ObjectId, ref: 'User' },
+    message: { type: String },
+})
+
 const messageSchema = new Schema ({
-    message: { type: 'String'},
-    institution: { type: Types.ObjectId, ref: 'Institution'},
+    messageCollection: [
+        {
+            author: { type: Types.ObjectId, ref: 'User' },
+            message: { type: String },
+        }
+    ],
+    post: { type: Types.ObjectId, ref: 'Post'},
     user: { type: Types.ObjectId, ref: 'User'}
 },
 {
     timestamps: true,
 });
 
-const Message = model('Message', messageSchema);
+const Messages = model('Messages', messageSchema);
 
-module.exports = Message;
+module.exports = Messages;

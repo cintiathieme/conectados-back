@@ -11,7 +11,7 @@ class PostsController {
 
             res.status(200).json(posts);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
@@ -19,7 +19,9 @@ class PostsController {
         try {
             const { id } = req.params;
 
-            const post = await this.Posts.findById(id);
+            const post = await this.Posts.findById(id).populate('institution');
+
+            console.log(post)
 
             if(post === null) {
                 res.status(404).json({message: 'Página não encontrada'});
@@ -32,13 +34,24 @@ class PostsController {
         }
     }
     
+    getMyPosts = async(req, res, next) => {
+        try {
+            const posts = await this.Posts.find({ institution: req.user.id });
+
+            res.status(200).json(posts);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
     createOne = async(req, res, next) => {
-        try {            
-            const newPost = new this.Posts(req.body);
+        try {                      
+            const newPost = new this.Posts({ ...req.body, institution: req.user.id });
+            console.log(newPost)
 
             await newPost.save();
 
-            res.status(201).json({ _id: newPost._id });
+            res.status(201).json(newPost);
         } catch (error) {
             console.log(error)
         }
