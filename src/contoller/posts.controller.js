@@ -1,8 +1,10 @@
 const Posts = require('../models/Post');
+const Users = require('../models/User');
 
 class PostsController {
     constructor() {
         this.Posts = Posts;
+        this.Users = Users;
     }
 
     getMany = async(req, res, next) => {
@@ -19,9 +21,7 @@ class PostsController {
         try {
             const { id } = req.params;
 
-            const post = await this.Posts.findById(id).populate('institution');
-
-            console.log(post)
+            const post = await this.Posts.findById(id)
 
             if(post === null) {
                 res.status(404).json({message: 'Página não encontrada'});
@@ -36,8 +36,8 @@ class PostsController {
     
     getMyPosts = async(req, res, next) => {
         try {
-            const posts = await this.Posts.find({ institution: req.user.id });
-
+            const posts = await this.Posts.find({ institution: req.user.id });            
+            
             res.status(200).json(posts);
         } catch (error) {
             console.log(error);
@@ -45,10 +45,13 @@ class PostsController {
     }
     
     createOne = async(req, res, next) => {
-        try {                      
-            const newPost = new this.Posts({ ...req.body, institution: req.user.id });
-            console.log(newPost)
-
+        try { 
+            const institution = await this.Users.find({institution: req.user.id });
+            const institutionName = await institution.name;
+            
+            const newPost = await new this.Posts({ ...req.body, institution: req.user.id, institutionName: institutionName });
+          
+        
             await newPost.save();
 
             res.status(201).json(newPost);
@@ -76,6 +79,16 @@ class PostsController {
             await this.Posts.findByIdAndDelete(id);
 
             res.status(200).json({ message: `post ${id} deleted` });
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    userInfos = async (req, res, next) => {
+        try {
+            const user = await this.Users.findOne( { _id: req.user.id });
+
+            res.status(200).json(user);
         } catch (error) {
             console.log(error)
         }

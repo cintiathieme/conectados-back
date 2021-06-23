@@ -6,6 +6,7 @@ const messageController = require('../../contoller/message.controller');
 const router = express();
 
 router.get('/', postsController.getMany);
+router.get('/userInfos', postsController.userInfos);
 router.post('/new-post', postsController.createOne);
 router.post('/:id', messageController.createOne);
 router.get('/:id', postsController.getOne);

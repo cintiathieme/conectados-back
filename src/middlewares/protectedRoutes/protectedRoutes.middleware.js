@@ -16,8 +16,7 @@ class ProtectedRoutesMiddleware {
         try {
             const tokenInfo = jwt.verify(tokenWithoutBearer, process.env.JWT_HASH);
             
-            req.user = tokenInfo;
-            //console.log(req.user)
+            req.user = tokenInfo;                      
             
             return next();
     

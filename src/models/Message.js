@@ -1,10 +1,5 @@
 const { Schema, model, Types } = require('mongoose');
 
-const eachMessageSchema = new Schema ({
-    author: { type: Types.ObjectId, ref: 'User' },
-    message: { type: String },
-})
-
 const messageSchema = new Schema ({
     messageCollection: [
         {
@@ -13,7 +8,10 @@ const messageSchema = new Schema ({
         }
     ],
     post: { type: Types.ObjectId, ref: 'Post'},
-    user: { type: Types.ObjectId, ref: 'User'}
+    volunteer: { type: Types.ObjectId, ref: 'User'},
+    volunteerName: { type: String },
+    institution: { type: Types.ObjectId, ref: 'User'},
+    institutionName: { type: String },
 },
 {
     timestamps: true,

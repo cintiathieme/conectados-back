@@ -1,13 +1,18 @@
 const Messages = require('../models/Message');
+const Posts = require('../models/Post');
+const Users = require('../models/User');
 
 class MessageController {
     constructor() {
         this.Messages = Messages;
+        this.Posts = Posts;
+        this.Users = Users; 
     }
 
     getMany = async(req, res, next) => {
         try {
-            const messages = await this.Messages.find();
+            const messages = await this.Messages.find({$or: [{institution: req.user.id}, {volunteer: req.user.id}]});
+            console.log(messages)
 
             res.status(200).json(messages);
         } catch (error) {
@@ -36,15 +41,30 @@ class MessageController {
         try { 
             const { id } = req.params;
 
-            const newMessage = new this.Messages({ 
+            const post = await this.Posts.findById(id);
+            const institutionId = await post.institution;
+
+            const institution = await this.Users.findById(institutionId);
+            const institutionName = await institution.name;
+
+            const volunteer = await this.Users.findById(req.user.id);
+            const volunteerName = await volunteer.name;
+
+            const newMessage = await new this.Messages({ 
                 messageCollection: [
                     {
                         author: req.user.id,
                         message: req.body.message
                     }
                 ], 
-                user: req.user.id,  
-                post: id });
+                volunteer: req.user.id,
+                volunteerName: volunteerName,   
+                post: id,
+                institution: institutionId,
+                institutionName: institutionName,
+            }
+            );
+            console.log(newMessage)
 
             await newMessage.save();
 
@@ -54,20 +74,22 @@ class MessageController {
         }
     }
     
-//     addMessage = async(req, res, next) => {
-//         try {
-//             const { id } = req.params;
-
-//             const newMessage = req.body;
-//             console.log(req.body)
+    addMessage = async(req, res, next) => {
+        try {
+            const { id } = req.params;
             
-//             await this.Messages.findByIdAndUpdate(id, newMessage );
+            await this.Messages.findByIdAndUpdate(id, {$push:  {messageCollection: [
+                {
+                    author: req.user.id,
+                    message: req.body.message
+                }
+            ]}});
 
-//             res.status(200).json({ message: `post ${id} updated` });
-//         } catch (error) {
-//             console.log(error)
-//         }
-//     }
+            res.status(200).json({ message: `post ${id} updated` });
+        } catch (error) {
+            console.log(error)
+        }
+    }
     
 }
 
