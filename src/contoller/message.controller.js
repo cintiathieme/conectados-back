@@ -11,8 +11,7 @@ class MessageController {
 
     getMany = async(req, res, next) => {
         try {
-            const messages = await this.Messages.find({$or: [{institution: req.user.id}, {volunteer: req.user.id}]});
-            console.log(messages)
+            const messages = await this.Messages.find({$or: [{institution: req.user.id}, {volunteer: req.user.id}]}).sort({updateAt: -1});           
 
             res.status(200).json(messages);
         } catch (error) {

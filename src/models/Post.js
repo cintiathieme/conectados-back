@@ -6,7 +6,7 @@ const postSchema = new Schema({
     image: { type: String, default: '../images/voluntariado.jpg' },
     description: { type: String, required: true },
     job: { type: String, required: true },
-    date: { type: Date},
+    type: { type: String, required: true, enum:['recurrent', 'once'] }    
 },
 {
     timestamps: true,

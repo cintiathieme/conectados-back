@@ -86,13 +86,14 @@ class PostsController {
 
     userInfos = async (req, res, next) => {
         try {
-            const user = await this.Users.findOne( { _id: req.user.id });
+            if (req.user) {const user = await this.Users.findOne( { _id: req.user.id });
 
-            res.status(200).json(user);
+            return res.status(200).json(user)}
+        
         } catch (error) {
             console.log(error)
         }
-    }
+    }    
 }
 
 module.exports = new PostsController();

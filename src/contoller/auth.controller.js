@@ -33,23 +33,23 @@ class AuthController {
             const userFromDb = await this.Users.findOne( { email: req.body.email });
 
             if (!userFromDb) {
-                return res.status(400).json( { message: 'Credenciais inválidas'})
+                return res.status(400).json( { message: 'Credenciais inválidas' })
             }
             
             const isPasswordValid = passwordManager.verify(req.body.password, userFromDb.password);
 
             if(!isPasswordValid) {
-                return res.status(400).json( { message: 'Credenciais inválidas'})
+                return res.status(400).json( { message: 'Credenciais inválidas' })
             }
 
             const token = jwtManager.generateAuthToken(userFromDb);
-            const role = userFromDb.role;
+           
 
-            res.status(200).json({ message: token, role: role });
+            res.status(200).json({ message: token });
         } catch (error) {
             console.log(error)
         }
-    }
+    };    
     
 }
 
