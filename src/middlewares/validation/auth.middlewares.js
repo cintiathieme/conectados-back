@@ -8,7 +8,7 @@ class AuthMiddleware {
                 name: Joi.string().trim().required(),
                 email: Joi.string().email().trim().required(),
                 password: Joi.string().trim().min(4).required(),
-                type: Joi.string().required()
+                role: Joi.string().required()
             });
 
         this.signinSchema = Joi.object()
