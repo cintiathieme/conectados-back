@@ -14,5 +14,6 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/', apiRoutes);
+app.use('/', require('./routes/fileUploadRoutes'));
 
 app.listen(process.env.PORT, () => console.log(`App running on PORT ${process.env.PORT}`));
