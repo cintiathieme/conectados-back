@@ -46,7 +46,9 @@ class PostsController {
     
     createOne = async(req, res, next) => {
         try { 
-            const institution = await this.Users.find({institution: req.user.id });
+            // const institution = await this.Users.find({institution: req.user.id });
+            // const institutionName = await institution.name;
+            const institution = await this.Users.findById(req.user.id);
             const institutionName = await institution.name;
             
             const newPost = await new this.Posts({ ...req.body, institution: req.user.id, institutionName: institutionName });
