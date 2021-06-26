@@ -5,6 +5,7 @@ const messageSchema = new Schema ({
         {
             author: { type: Types.ObjectId, ref: 'User' },
             message: { type: String },
+            date: { type: String }
         }
     ],
     post: { type: Types.ObjectId, ref: 'Post'},

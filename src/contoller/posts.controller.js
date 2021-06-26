@@ -9,7 +9,7 @@ class PostsController {
 
     getMany = async(req, res, next) => {
         try {
-            const posts = await this.Posts.find();
+            const posts = await this.Posts.find().sort({updatedAt: -1});            
 
             res.status(200).json(posts);
         } catch (error) {
@@ -50,8 +50,10 @@ class PostsController {
             // const institutionName = await institution.name;
             const institution = await this.Users.findById(req.user.id);
             const institutionName = await institution.name;
+            const date = new Date();
+            const postDate = date.toLocaleDateString("pt-BR")           
             
-            const newPost = await new this.Posts({ ...req.body, institution: req.user.id, institutionName: institutionName });
+            const newPost = await new this.Posts({ ...req.body, institution: req.user.id, institutionName: institutionName, date: postDate });
           
         
             await newPost.save();

@@ -49,11 +49,15 @@ class MessageController {
             const volunteer = await this.Users.findById(req.user.id);
             const volunteerName = await volunteer.name;
 
+            const date = new Date();
+            const messageDate = date.toLocaleDateString("pt-BR")  
+
             const newMessage = await new this.Messages({ 
                 messageCollection: [
                     {
                         author: req.user.id,
-                        message: req.body.message
+                        message: req.body.message,
+                        date: messageDate
                     }
                 ], 
                 volunteer: req.user.id,
